@@ -9,32 +9,43 @@ public class EightPuzzleState {
 	private String goalString = "123804765";
 	private EightPuzzleState parent; //points to parent
 	private String stateString; //acts as actual state
-	private int gScore; //current cost of state
+	private int hScore; //Heuristic cost
+	private int gScore; //Distance score
+	private int fCost; //total Score
 	
-	public EightPuzzleState(String state) {
+	public EightPuzzleState(String state) { //parent basic constructor
 		parent = null;
 		stateString = state;
 		gScore = 0;
+		hScore = getOutOfPlace(); //is this ok? 
+		fCost = gScore + hScore;
 	}
-	public EightPuzzleState(String state, EightPuzzleState parent) {
+	/*public EightPuzzleState(String state, EightPuzzleState parent) { //REMOVE LATER
 		this.parent = parent; //assign parent to class
 		this.stateString = state;
 		gScore = 0;
-	}
-	public EightPuzzleState(String state, EightPuzzleState parent, int gScore) {
+	}*/
+	public EightPuzzleState(String state, EightPuzzleState parent, int gScore) { //main oncstructor
 		this.parent = parent; //assign parent to class
 		this.stateString = state;
 		this.gScore = gScore; //define the gScore upon creation of object
+		this.hScore = getOutOfPlace();
+		this.fCost = this.gScore + this.hScore;  
 	}
 	public EightPuzzleState getParent() {
 		return parent;
 	}
-	
 	public String getString() {
 		return stateString;
 	}
 	public int getGScore() {
 		return gScore;
+	}
+	public int getHScore() {
+		return hScore;
+	}
+	public int getfCost() {
+		return fCost;
 	}
 	public ArrayList<String> getChildrenStrings() {
 		ArrayList<String> returnstates = new ArrayList<String>();

@@ -12,10 +12,10 @@ public class Runner {
 		//breadthrun();
 	}
 	public static void a_starrun() { //note goal string "123804765"
-		System.out.println("Starting Runner Method...");
-		String TestString1 = "103824765"; //one move from win
+		String TestString1 = "103824765"; //one from win
+		String TestString2 = "813024765"; //need to test these two
 		EightPuzzleGame mygame = new EightPuzzleGame();
-		mygame.AStarSearch(TestString1, true);
+		mygame.AStarSearch(TestString2, true);
 	}
 	public static void breadthrun() { //note goal string: "123804765"		
 		System.out.println("Starting Runner Method...");
@@ -28,6 +28,22 @@ public class Runner {
 		System.out.println("END");
 		//mygame.breadthSearch(TestString2, true);
 	}
+	public static void test7() { //test priorityqueue orders correctly
+		String TestString1 = "123840765"; //one move from win
+		EightPuzzleState testState = new EightPuzzleState(TestString1); //act as parent
+		
+		MyComparator comparator = new MyComparator(); //test this
+		PriorityQueue<EightPuzzleState> statesToSearch = 
+				new PriorityQueue<EightPuzzleState>(comparator);// and this
+		for(EightPuzzleState state : testState.getChildrenStates()) {
+			System.out.println("S:" + state.getString() + " fc: " + state.getfCost()); //print string
+			statesToSearch.add(state); 
+		}
+		System.out.println("NEXT");
+		for(EightPuzzleState state : statesToSearch) { //SHOULD be in different order
+			System.out.println("S:" + state.getString() + " fc: " + state.getfCost());
+		}
+	}//SUCCESS it does sort according to fCost
 	public static void test6() { //test of EightPuzzleState.getManhattan() 
 		String TestString1 = "123804765";
 		EightPuzzleState testState = new EightPuzzleState(TestString1);

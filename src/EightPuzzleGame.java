@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack; 
 import java.util.Queue; //for depth search
-import java.util.Comparator; // ??
 import java.util.PriorityQueue; //for AStar Search
 
 public class EightPuzzleGame {
@@ -64,46 +63,39 @@ public class EightPuzzleGame {
 		MyComparator comparator = new MyComparator(); //EightPuzzle implementation
 		PriorityQueue<EightPuzzleState> statesToSearch = new PriorityQueue<EightPuzzleState>(comparator); //DEBUG  
 		ArrayList<String> exploredStates = new ArrayList<String>();
-		EightPuzzleState parentState = new EightPuzzleState(startString); //no parent
+		
+		EightPuzzleState parentState = new EightPuzzleState(startString, null, 0); //no parent, and no score as its the start
 		statesToSearch.add(parentState); 
-				
 		int loopcounter = 0;
-		if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" )); //printout statetopline
+		int fc=9;
+		if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter", "fCost")); //printout statetopline
 		while(!(statesToSearch.isEmpty())) {
 			loopcounter++;
-			if(debug) System.out.println(String.format("%-20s %-20s %-6s", ("?: "+statesToSearch.size()),("X: " + exploredStates.size()), 
-					("S: "+loopcounter))); //printout states while in loop
-			EightPuzzleState state = statesToSearch.poll(); //pop off spot
+			if(debug) System.out.println(String.format("%-20s %-20s %-10s %-6s", ("?: "+statesToSearch.size()),("X: " + exploredStates.size()), 
+					("S: "+loopcounter),("fC: "+fc))); //printout states while in loop
+			EightPuzzleState state = statesToSearch.poll(); //pop off spot\
 			if (state.getString().equals(goalString)) {
-				if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" )); //printout statetopline
+				fc=0;//found winner
+				if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter", "fCost" )); //printout statetopline
 				if(debug) {
 					System.out.println("Winner!");
-					printsolution(state); //go on to print the solution 
+					printsolution(state); //go on to print the solution
 				} else {
 					foundWinner=true; //otherwise just return that we found the winner in GLOBAL variable
 				}
-			}
+				return;
+			} //else
 			exploredStates.add(state.getString()); //add state that isn't a win
+			fc = state.getfCost();
 			ArrayList<EightPuzzleState> childrenStatesToCheck = new ArrayList<EightPuzzleState>();
 			for(EightPuzzleState mystate : state.getChildrenStates()) {
 				if(!exploredStates.contains(mystate.getString())) {
+					//childrenStatesToCheck.add(mystate);
 					childrenStatesToCheck.add(mystate);
 				}
 			} //WORK BELOW
 			if(!childrenStatesToCheck.isEmpty()) { //get children states
 				statesToSearch.addAll(childrenStatesToCheck); //SHOULD add them in order 
-			}
-			for(EightPuzzleState mystate : state.getChildrenStates()){ //get the children states, or neighbors
-				if(!exploredStates.contains(mystate.getString())) {
-					//get gscore of target, or tentative_gScore, which is gscore of current + dist_between current and neighbor
-					//IE the distance from start to a neighbor
-					//MY NOTES
-					//get total out of Place
-					if (state.getTotalOutOfPlace() >= mystate.getTotalOutOfPlace()) { //this state is NOT more optimal
-						continue; //move along now?
-					} //else, this is a "better" path
-					statesToSearch.add(mystate); //add mytate if its more optimal
-				}
 			}
 		}
 	}
