@@ -7,6 +7,8 @@ import java.util.PriorityQueue; //for AStar Search
 
 public class EightPuzzleGame {
 	private String goalString = "123804765";
+	private ArrayList<String> exploredStates = new ArrayList<String>();
+	private Queue<EightPuzzleState> statesToSearch = new LinkedList<EightPuzzleState>();
 	private boolean foundWinner;
 	
 	public EightPuzzleGame(String startString, boolean debug) { //autostart game
@@ -93,7 +95,7 @@ public class EightPuzzleGame {
 		return null; //REMOVE LATER
 	}*/
 	/**Print out solution to problem*/
-	private void printsolution(EightPuzzleState winner) {
+	public void printsolution(EightPuzzleState winner) {
 		Stack<EightPuzzleState> solutionPath = new Stack<EightPuzzleState>();
 		EightPuzzleState tempNode = winner;
 		solutionPath.push(tempNode);
@@ -110,7 +112,7 @@ public class EightPuzzleGame {
 		}
 		System.out.println("Number Of Moves:" + loopSize);
 	}
-	private boolean getWinner() {
+	public boolean getWinner() {
 		return foundWinner;
 	}
 }

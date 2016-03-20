@@ -1,5 +1,4 @@
 import java.util.PriorityQueue;
-
 /**
  * 
  * @author Bradley Taniguchi
@@ -13,10 +12,14 @@ public class Runner {
 		//breadthrun();
 	}
 	public static void breadthrun() { //note goal string: "123804765"
+		test2();
+		
+		System.out.println("Starting Runner Method...");
 		//String TestString1 = "012345678"; //impossible to win?
 		String TestString1 = "103824765"; //one move from win
 		String TestString2 = "123456780"; //need to test these two
 		//String TestString3 = "087654321";
+		//test();
 		EightPuzzleGame mygame = new EightPuzzleGame();
 		mygame.breadthSearch(TestString1, true); //false to keep prints off
 		System.out.println("NEXT");
@@ -95,5 +98,5 @@ public class Runner {
 			//System.out.println("STATE: " + state.getString());
 			state.printStatus();
 		}
-	}//SUCCESS
+	}
 }

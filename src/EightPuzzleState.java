@@ -9,7 +9,6 @@ public class EightPuzzleState {
 	private String goalString = "123804765";
 	private EightPuzzleState parent; //points to parent
 	private String stateString; //acts as actual state
-	
 	public EightPuzzleState(String state) {
 		parent = null;
 		stateString = state;
@@ -178,7 +177,6 @@ public class EightPuzzleState {
 	}
 	private String moveRight() {
 		return swap((int) getSpace()+1, getSpace(), stateString);
-
 	}
 	private static String swap(int index1, int index2, String string) {
 		char[] c = string.toCharArray(); //trun to array
