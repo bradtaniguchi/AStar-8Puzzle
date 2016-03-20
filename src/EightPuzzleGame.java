@@ -21,30 +21,30 @@ public class EightPuzzleGame {
 	}
 	/**BreadthSearch implementation*/
 	public void breadthSearch(String startString, boolean debug) {
-		ArrayList<String> exploredStates = new ArrayList<String>();
-		Queue<EightPuzzleState> statesToSearch = new LinkedList<EightPuzzleState>();
+		ArrayList<String> exploredStates = new ArrayList<String>(); // Create list of explored states
+		Queue<EightPuzzleState> statesToSearch = new LinkedList<EightPuzzleState>(); // creates list of states to explore, expand as needed
 		
 		EightPuzzleState parentState = new EightPuzzleState(startString); // no parent
 		statesToSearch.add(parentState);// add parent state to be checked
-		int loopcounter = 0;
-		if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" ));
+		int loopcounter = 0; //keep track of how many while loops gone through, for debuggin purposes
+		if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" )); //printout statetopline
 		while(!(statesToSearch.isEmpty())) {
 			loopcounter++;
 			if(debug) System.out.println(String.format("%-20s %-20s %-6s", ("?: "+statesToSearch.size()),("X: " + exploredStates.size()), 
-					("S: "+loopcounter)));
-			EightPuzzleState state = statesToSearch.poll(); //pop state
-			if(state.getString().equals(goalString)) {
-				if(debug)System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" ));
+					("S: "+loopcounter))); //printout states while in loop
+			EightPuzzleState state = statesToSearch.poll(); //pop state to check, SHOULD BE ordered by Fscore
+			if(state.getString().equals(goalString)) { // if the state equals goal, exit 
+				if(debug)System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" )); //end print
 				if(debug) {
 					System.out.println("Winner!");
-					printsolution(state);
+					printsolution(state); //go on to print the solution 
 				} else {
-					foundWinner=true;
+					foundWinner=true; //otherwise just return that we found the winner in GLOBAL variable
 				}
-				return;
+				return; //exit function loop
 			}
 			exploredStates.add(state.getString()); // add state is not a win
-			ArrayList<EightPuzzleState> childrenStatesToCheck = new ArrayList<EightPuzzleState>(); 
+			ArrayList<EightPuzzleState> childrenStatesToCheck = new ArrayList<EightPuzzleState>();  
 			//childrenStatesToCheck = state.getChildrenStates();
 			for(EightPuzzleState mystate : state.getChildrenStates()) {
 				if(!exploredStates.contains(mystate.getString())) {
@@ -80,9 +80,21 @@ public class EightPuzzleGame {
 				if(!exploredStates.contains(mystate.getString())) {
 					childrenStatesToCheck.add(mystate);
 				}
-			}
+			} //WORK BELOW
 			if(!childrenStatesToCheck.isEmpty()) { //get children states
 				statesToSearch.addAll(childrenStatesToCheck); //SHOULD add them in order 
+			}
+			for(EightPuzzleState mystate : state.getChildrenStates()){ //get the children states, or neighbors
+				if(!exploredStates.contains(mystate.getString())) {
+					//get gscore of target, or tentative_gScore, which is gscore of current + dist_between current and neighbor
+					//IE the distance from start to a neighbor
+					//MY NOTES
+					//get manhattan distance and only explore the most "optimal" one
+					if (state.getManhattan() >= mystate.getManhattan()) { //this state is NOT more optimal
+						continue; //move along now?
+					} //else, this is a "better" path
+					statesToSearch.add(mystate); //add mytate if its more optimal
+				}
 			}
 		}
 	}

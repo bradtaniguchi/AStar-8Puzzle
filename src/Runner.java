@@ -8,22 +8,19 @@ import java.util.PriorityQueue;
 public class Runner {
 	public static void main(String arg[]) {
 		System.out.println("Starting Runner Method...");
-		test6();
-		//breadthrun();
+		//test6();
+		breadthrun();
 	}
-	public static void breadthrun() { //note goal string: "123804765"
-		test2();
-		
+	public static void breadthrun() { //note goal string: "123804765"		
 		System.out.println("Starting Runner Method...");
 		//String TestString1 = "012345678"; //impossible to win?
 		String TestString1 = "103824765"; //one move from win
-		String TestString2 = "123456780"; //need to test these two
+		//String TestString2 = "123456780"; //need to test these two
 		//String TestString3 = "087654321";
-		//test();
 		EightPuzzleGame mygame = new EightPuzzleGame();
 		mygame.breadthSearch(TestString1, true); //false to keep prints off
 		System.out.println("NEXT");
-		mygame.breadthSearch(TestString2, true);
+		//mygame.breadthSearch(TestString2, true);
 	}
 	public static void test6() { //test of EightPuzzleState.getManhattan() 
 		String TestString1 = "123804765";
