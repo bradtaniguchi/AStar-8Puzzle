@@ -62,18 +62,27 @@ public class EightPuzzleGame {
 	public void AStarSearch(String startString, boolean debug) { //work here
 		if(debug) System.out.println("Starting AStarSearch..."); //update later
 		MyComparator comparator = new MyComparator(); //EightPuzzle implementation
-		
-		PriorityQueue<EightPuzzleState> statesToSearch = 
-				new PriorityQueue<EightPuzzleState>(comparator); //DEBUG  
+		PriorityQueue<EightPuzzleState> statesToSearch = new PriorityQueue<EightPuzzleState>(comparator); //DEBUG  
 		ArrayList<String> exploredStates = new ArrayList<String>();
-		
 		EightPuzzleState parentState = new EightPuzzleState(startString); //no parent
 		statesToSearch.add(parentState); 
 				
 		int loopcounter = 0;
+		if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" )); //printout statetopline
 		while(!(statesToSearch.isEmpty())) {
+			loopcounter++;
+			if(debug) System.out.println(String.format("%-20s %-20s %-6s", ("?: "+statesToSearch.size()),("X: " + exploredStates.size()), 
+					("S: "+loopcounter))); //printout states while in loop
 			EightPuzzleState state = statesToSearch.poll(); //pop off spot
-						
+			if (state.getString().equals(goalString)) {
+				if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" )); //printout statetopline
+				if(debug) {
+					System.out.println("Winner!");
+					printsolution(state); //go on to print the solution 
+				} else {
+					foundWinner=true; //otherwise just return that we found the winner in GLOBAL variable
+				}
+			}
 			exploredStates.add(state.getString()); //add state that isn't a win
 			ArrayList<EightPuzzleState> childrenStatesToCheck = new ArrayList<EightPuzzleState>();
 			for(EightPuzzleState mystate : state.getChildrenStates()) {
@@ -89,8 +98,8 @@ public class EightPuzzleGame {
 					//get gscore of target, or tentative_gScore, which is gscore of current + dist_between current and neighbor
 					//IE the distance from start to a neighbor
 					//MY NOTES
-					//get manhattan distance and only explore the most "optimal" one
-					if (state.getManhattan() >= mystate.getManhattan()) { //this state is NOT more optimal
+					//get total out of Place
+					if (state.getTotalOutOfPlace() >= mystate.getTotalOutOfPlace()) { //this state is NOT more optimal
 						continue; //move along now?
 					} //else, this is a "better" path
 					statesToSearch.add(mystate); //add mytate if its more optimal

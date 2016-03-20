@@ -8,8 +8,14 @@ import java.util.PriorityQueue;
 public class Runner {
 	public static void main(String arg[]) {
 		System.out.println("Starting Runner Method...");
-		//test6();
-		breadthrun();
+		a_starrun();
+		//breadthrun();
+	}
+	public static void a_starrun() { //note goal string "123804765"
+		System.out.println("Starting Runner Method...");
+		String TestString1 = "103824765"; //one move from win
+		EightPuzzleGame mygame = new EightPuzzleGame();
+		mygame.AStarSearch(TestString1, true);
 	}
 	public static void breadthrun() { //note goal string: "123804765"		
 		System.out.println("Starting Runner Method...");
@@ -19,19 +25,19 @@ public class Runner {
 		//String TestString3 = "087654321";
 		EightPuzzleGame mygame = new EightPuzzleGame();
 		mygame.breadthSearch(TestString1, true); //false to keep prints off
-		System.out.println("NEXT");
+		System.out.println("END");
 		//mygame.breadthSearch(TestString2, true);
 	}
 	public static void test6() { //test of EightPuzzleState.getManhattan() 
 		String TestString1 = "123804765";
 		EightPuzzleState testState = new EightPuzzleState(TestString1);
-		System.out.println(testState.getManhattan()); //should be 0
+		System.out.println(testState.getTotalOutOfPlace()); //should be 0
 		//part two
 		System.out.println("Part Two");
 		
 		String TestString2 = "103824765";
 		EightPuzzleState testState2 = new EightPuzzleState(TestString2);
-		System.out.println(testState2.getManhattan()); //should be 2, but it SHOULD take 1 swap
+		System.out.println(testState2.getTotalOutOfPlace()); //should be 2, but it SHOULD take 1 swap
 	}
 	public static void test5() { //test EightPuzzleState.tileDist, on one character
 		String TestString1 = "103824765"; //1 move from win

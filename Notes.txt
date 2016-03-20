@@ -1,0 +1,11 @@
+Notes on AStar Search
+gScore = the base score of the node, simply the incremental cost of moving from the start node to this node
+	to get this add variable to EightPuzzleState
+fScore = is the Heuristic cost, or estimating the distance between each node and the goal
+	
+Other things to remember:
+	Best-First search, or looking into the best opportunity FIRST
+	Hamming priority function, the number of blocks in the wrong position, plus number of moves 
+	made so far to get to the search node
+	
+	
