@@ -13,9 +13,28 @@ public class Runner {
 	}
 	public static void a_starrun() { //note goal string "123804765"
 		String TestString1 = "103824765"; //one from win
-		String TestString2 = "813024765"; //need to test these two
+		//String TestString20 = "013824765"; // //3353???
+		String TestString2 = "023184765"; // a few from win 
+		String TestString3 = "813724650"; //difficult string
 		EightPuzzleGame mygame = new EightPuzzleGame();
-		mygame.AStarSearch(TestString2, true);
+		/**Debug Print, and Manhattan usage*/
+		boolean manhattan = true; 
+		boolean outprint = true;
+		mygame.AStarSearch(TestString1, outprint, manhattan);
+		if (mygame.getWinner() && !outprint) {
+			System.out.println("Found A Winner for 1");
+		}
+		mygame.AStarSearch(TestString2, outprint, manhattan);
+		if (mygame.getWinner() && !outprint) {
+			System.out.println("Found A Winner for 2");
+		}
+		mygame.AStarSearch(TestString3, outprint, manhattan);
+		if (mygame.getWinner() && !outprint) {
+			System.out.println("Found A Winner for 3");
+		}
+		/**Onto manhattan version*/
+		manhattan = false;
+		
 	}
 	public static void breadthrun() { //note goal string: "123804765"		
 		System.out.println("Starting Runner Method...");
@@ -47,13 +66,13 @@ public class Runner {
 	public static void test6() { //test of EightPuzzleState.getManhattan() 
 		String TestString1 = "123804765";
 		EightPuzzleState testState = new EightPuzzleState(TestString1);
-		System.out.println(testState.getTotalOutOfPlace()); //should be 0
+		System.out.println(testState.getManhattan()); //should be 0
 		//part two
 		System.out.println("Part Two");
 		
 		String TestString2 = "103824765";
 		EightPuzzleState testState2 = new EightPuzzleState(TestString2);
-		System.out.println(testState2.getTotalOutOfPlace()); //should be 2, but it SHOULD take 1 swap
+		System.out.println(testState2.getManhattan()); //should be 2, but it SHOULD take 1 swap
 	}
 	public static void test5() { //test EightPuzzleState.tileDist, on one character
 		String TestString1 = "103824765"; //1 move from win

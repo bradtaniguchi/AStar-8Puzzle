@@ -31,7 +31,7 @@ public class EightPuzzleGame {
 			loopcounter++;
 			if(debug) System.out.println(String.format("%-20s %-20s %-6s", ("?: "+statesToSearch.size()),("X: " + exploredStates.size()), 
 					("S: "+loopcounter))); //printout states while in loop
-			EightPuzzleState state = statesToSearch.poll(); //pop state to check, SHOULD BE ordered by Fscore
+			EightPuzzleState state = statesToSearch.poll(); //pop state to check
 			if(state.getString().equals(goalString)) { // if the state equals goal, exit 
 				if(debug)System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter" )); //end print
 				if(debug) {
@@ -57,21 +57,22 @@ public class EightPuzzleGame {
 		}
 		if(debug) System.out.println("WINNER Not found?");
 	} //end BreadthSearch
-	/** A* search algorithm*/
-	public void AStarSearch(String startString, boolean debug) { //work here
-		if(debug) System.out.println("Starting AStarSearch..."); //update later
+	/** A* search algorithm with manhattan flag, defaults to outofplace*/
+	public void AStarSearch(String startString, boolean debug, boolean manhattan) { //work here
+		foundWinner = false; //reset flag
+		if(debug) System.out.println("\n\nStarting AStarSearch with startString: " + startString); //update later
 		MyComparator comparator = new MyComparator(); //EightPuzzle implementation
 		PriorityQueue<EightPuzzleState> statesToSearch = new PriorityQueue<EightPuzzleState>(comparator); //DEBUG  
 		ArrayList<String> exploredStates = new ArrayList<String>();
 		
-		EightPuzzleState parentState = new EightPuzzleState(startString, null, 0); //no parent, and no score as its the start
+		EightPuzzleState parentState = new EightPuzzleState(startString, null, 0, manhattan); //no parent, and no score as its the start
 		statesToSearch.add(parentState); 
 		int loopcounter = 0;
 		int fc=9;
 		if(debug) System.out.println(String.format("%-20s %-20s %-6s","statesToSearch", "exploredStates", "loopcounter", "fCost")); //printout statetopline
 		while(!(statesToSearch.isEmpty())) {
 			loopcounter++;
-			if(debug) System.out.println(String.format("%-20s %-20s %-10s %-6s", ("?: "+statesToSearch.size()),("X: " + exploredStates.size()), 
+			if(debug) System.out.println(String.format("%-20s %-20s %-20s %-6s", ("?: "+statesToSearch.size()),("X: " + exploredStates.size()), 
 					("S: "+loopcounter),("fC: "+fc))); //printout states while in loop
 			EightPuzzleState state = statesToSearch.poll(); //pop off spot\
 			if (state.getString().equals(goalString)) {
@@ -88,7 +89,7 @@ public class EightPuzzleGame {
 			exploredStates.add(state.getString()); //add state that isn't a win
 			fc = state.getfCost();
 			ArrayList<EightPuzzleState> childrenStatesToCheck = new ArrayList<EightPuzzleState>();
-			for(EightPuzzleState mystate : state.getChildrenStates()) {
+			for(EightPuzzleState mystate : state.getChildrenStates(manhattan)) {
 				if(!exploredStates.contains(mystate.getString())) {
 					//childrenStatesToCheck.add(mystate);
 					childrenStatesToCheck.add(mystate);

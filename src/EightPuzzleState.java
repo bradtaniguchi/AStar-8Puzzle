@@ -20,16 +20,20 @@ public class EightPuzzleState {
 		hScore = getOutOfPlace(); //is this ok? 
 		fCost = gScore + hScore;
 	}
-	/*public EightPuzzleState(String state, EightPuzzleState parent) { //REMOVE LATER
-		this.parent = parent; //assign parent to class
+	/**Generic Brute Force implimentation*/
+	public EightPuzzleState(String state, EightPuzzleState parent) {
+		this.parent = parent;
 		this.stateString = state;
-		gScore = 0;
-	}*/
-	public EightPuzzleState(String state, EightPuzzleState parent, int gScore) { //main oncstructor
+		this.gScore = 0; //not used
+		this.hScore = 0; //not used
+	}
+	/**AStar Implimentation*/
+	public EightPuzzleState(String state, EightPuzzleState parent, int gScore, boolean manhattan) { //main constructor
 		this.parent = parent; //assign parent to class
 		this.stateString = state;
 		this.gScore = gScore; //define the gScore upon creation of object
-		this.hScore = getOutOfPlace();
+		if (manhattan) this.hScore = getManhattan(); //allow two ways to get heuristic 
+		else this.hScore = getOutOfPlace(); 
 		this.fCost = this.gScore + this.hScore;  
 	}
 	public EightPuzzleState getParent() {
@@ -47,6 +51,7 @@ public class EightPuzzleState {
 	public int getfCost() {
 		return fCost;
 	}
+	/**Not generally used, use the state version instead*/
 	public ArrayList<String> getChildrenStrings() {
 		ArrayList<String> returnstates = new ArrayList<String>();
 		if (!((getSpace() == 0) || (getSpace() == 1) || (getSpace() == 2))) {  //UP
@@ -63,28 +68,52 @@ public class EightPuzzleState {
 		}
 		return returnstates; //list of strings
 	}
+	/**Get the children states, order according to Manhattan OR default out of place*/
+	public ArrayList<EightPuzzleState> getChildrenStates(boolean manhattan) {
+		ArrayList<EightPuzzleState> returnstates = new ArrayList<EightPuzzleState>();
+		
+		if (!((getSpace() == 0) || (getSpace() == 1) || (getSpace() == 2))) {  //UP
+			EightPuzzleState childstate = new EightPuzzleState((String)moveUp(),this, gScore + 1, manhattan);
+			returnstates.add(childstate);
+		}
+		if(!((getSpace() == 6) || (getSpace() == 7) || (getSpace() == 8))) { //DOWN
+			EightPuzzleState childstate = new EightPuzzleState((String)moveDown(), this, gScore + 1, manhattan);
+			returnstates.add(childstate);
+		}
+		if(!((getSpace() == 0) || (getSpace() == 3) || (getSpace() == 6))) {//LEFT
+			EightPuzzleState childstate = new EightPuzzleState((String)moveLeft(), this, gScore + 1, manhattan);
+			returnstates.add(childstate);
+		}
+		if(!((getSpace() == 2) || (getSpace() == 5) || (getSpace() == 8))) {//RIGHT
+			EightPuzzleState childstate = new EightPuzzleState((String)moveRight(), this, gScore + 1, manhattan);
+			returnstates.add(childstate);
+		}
+		return returnstates; //list of states
+	}
+	/**Non huristic function*/
 	public ArrayList<EightPuzzleState> getChildrenStates() {
 		ArrayList<EightPuzzleState> returnstates = new ArrayList<EightPuzzleState>();
 		
 		if (!((getSpace() == 0) || (getSpace() == 1) || (getSpace() == 2))) {  //UP
-			EightPuzzleState childstate = new EightPuzzleState((String)moveUp(),this, gScore + 1);
+			EightPuzzleState childstate = new EightPuzzleState((String)moveUp(),this);
 			returnstates.add(childstate);
 		}
 		if(!((getSpace() == 6) || (getSpace() == 7) || (getSpace() == 8))) { //DOWN
-			EightPuzzleState childstate = new EightPuzzleState((String)moveDown(), this, gScore + 1);
+			EightPuzzleState childstate = new EightPuzzleState((String)moveDown(), this);
 			returnstates.add(childstate);
 		}
 		if(!((getSpace() == 0) || (getSpace() == 3) || (getSpace() == 6))) {//LEFT
-			EightPuzzleState childstate = new EightPuzzleState((String)moveLeft(), this, gScore + 1);
+			EightPuzzleState childstate = new EightPuzzleState((String)moveLeft(), this);
 			returnstates.add(childstate);
 		}
 		if(!((getSpace() == 2) || (getSpace() == 5) || (getSpace() == 8))) {//RIGHT
-			EightPuzzleState childstate = new EightPuzzleState((String)moveRight(), this, gScore + 1);
+			EightPuzzleState childstate = new EightPuzzleState((String)moveRight(), this);
 			returnstates.add(childstate);
 		}
-		return returnstates; //list of strings
+		return returnstates; //list of states
 	}
-	/**Get how many spots in current state, are out of place*/
+	/**Get how many spots in current state, are out of place
+	 * First Metric*/
 	public int getOutOfPlace() { 
 		int ret = 9; //9 not in place
 		char[] mygoalString = goalString.toCharArray();
@@ -97,9 +126,8 @@ public class EightPuzzleState {
 		return ret; //return number out of place
 	}
 	/**Gets ManHattan distance, or distance from every tile to its goal position
-	 * NOTE if there needs 1 swap between numbers, you will get two. IDK if thise works correctly
-	 * BUT it is a good indication of how "far" tiles are out of place*/
-	public int getTotalOutOfPlace() { //DEBUG
+	 * Second Metric*/
+	public int getManhattan() { //DEBUG
 		int totalcount = 0; //0 are out of place, we assume
 		char[] stateArray = goalString.toCharArray(); //test?
 		for(char c : stateArray){ //for each character in stateArray
